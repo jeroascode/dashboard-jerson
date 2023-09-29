@@ -12,25 +12,20 @@ import {
     Title
 } from "@tremor/react";
 
-import { useGetSubjectsQuery } from "../api/apiSlice";
+import { useGetAssistanceBySubjectQuery } from "../api/apiSlice";
 import { useEffect, useState } from "react";
 
-// let subjects = []
 
 const QueryPage = () => {
-    const { data: dataSubjects, isSuccess: isSuccessSubjects } = useGetSubjectsQuery()
+    const { data: dataAssistanceBySubject, isSuccess: isSuccessAssistanceBySubject } = useGetAssistanceBySubjectQuery()
 
-    const [currentSubjects, setCurrentSubjects] = useState([])
-    
-    console.log(dataSubjects, isSuccessSubjects);
+    const [currentAssistanceBySubject, setCurrentAssistanceBySubject] = useState([])
+
     useEffect(() => {
-        if (isSuccessSubjects) {
-            // subjects = dataSubjects.map((subject) => {
-            //     subjects.push({ name: subject })
-            // })
-            // setCurrentSubjects(subjects)
+        if (isSuccessAssistanceBySubject) {
+            setCurrentAssistanceBySubject(dataAssistanceBySubject)
         }
-    }, [isSuccessSubjects])
+    }, [isSuccessAssistanceBySubject])
 
     return (
         <Box w='100%' bg='white'>
@@ -40,21 +35,27 @@ const QueryPage = () => {
             </Box>
             <Box display='flex' gap='35px' pt='0' pb='35px' pl='35px' pr='35px'>
                 <Card>
-                    <Title>Query 8</Title>
+                    <Title>Asistencia por Asignatura</Title>
                     <Table className="mt-5">
                         <TableHead>
                             <TableRow>
-                                <TableHeaderCell>Name</TableHeaderCell>
-                                <TableHeaderCell>Position</TableHeaderCell>
-                                <TableHeaderCell>Department</TableHeaderCell>
+                                <TableHeaderCell>Asignatura</TableHeaderCell>
+                                <TableHeaderCell>Session_1</TableHeaderCell>
+                                <TableHeaderCell>Session_2</TableHeaderCell>
+                                <TableHeaderCell>Session_3</TableHeaderCell>
+                                <TableHeaderCell>Session_4</TableHeaderCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {/* {currentSubjects.map((i, item) => (
-                                <TableRow key={i}>
-                                    <TableCell>{item.name}</TableCell>
+                            {currentAssistanceBySubject.map((item) => {
+                                return <TableRow key={item}>
+                                    <TableCell>{item.Asignatura}</TableCell>
+                                    <TableCell>{item.Session_1}</TableCell>
+                                    <TableCell>{item.Session_2}</TableCell>
+                                    <TableCell>{item.Session_3}</TableCell>
+                                    <TableCell>{item.Session_4}</TableCell>
                                 </TableRow>
-                            ))} */}
+                            })}
                         </TableBody>
                     </Table>
                 </Card>

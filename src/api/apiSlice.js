@@ -6,8 +6,8 @@ export const apiSlice = createApi({
         baseUrl: 'http://localhost:5001'
     }),
     endpoints: (builder) => ({
-        getSubjects: builder.query({
-            query: () => '/subject',
+        getAssistanceBySubject: builder.query({
+            query: () => '/assistance-by-subject',
             transformResponse: (response) => response.Subjects
         }),
         getTopSubject: builder.query({
@@ -17,8 +17,16 @@ export const apiSlice = createApi({
         getTopStudent: builder.query({
             query: () => '/top-student',
             transformResponse: (response) => response.Subjects
+        }),
+        getTopSubjectMax: builder.query({
+            query: () => '/top-subject-max',
+            transformResponse: (response) => response.Subjects
+        }),
+        getTopAcademicProgramAssitance: builder.query({
+            query: () => '/top-academic-program-assitance',
+            transformResponse: (response) => response.Subjects
         })
     })
 })
 
-export const { useGetSubjectsQuery, useGetTopSubjectQuery, useGetTopStudentQuery } = apiSlice
+export const { useGetAssistanceBySubjectQuery, useGetTopSubjectQuery, useGetTopStudentQuery, useGetTopSubjectMaxQuery, useGetTopAcademicProgramAssitanceQuery } = apiSlice
