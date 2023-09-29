@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import { Box, Divider, Heading } from "@chakra-ui/react";
 import {
     Card,
@@ -7,58 +9,29 @@ import {
     TableHeaderCell,
     TableBody,
     TableCell,
-    Text,
     Title
 } from "@tremor/react";
 
-const data = [
-    {
-        name: "Viola Amherd",
-        Role: "Federal Councillor",
-        departement: "The Federal Department of Defence, Civil Protection and Sport (DDPS)",
-        status: "active",
-    },
-    {
-        name: "Simonetta Sommaruga",
-        Role: "Federal Councillor",
-        departement:
-            "The Federal Department of the Environment, Transport, Energy and Communications (DETEC)",
-        status: "active",
-    },
-    {
-        name: "Alain Berset",
-        Role: "Federal Councillor",
-        departement: "The Federal Department of Home Affairs (FDHA)",
-        status: "active",
-    },
-    {
-        name: "Ignazio Cassis",
-        Role: "Federal Councillor",
-        departement: "The Federal Department of Foreign Affairs (FDFA)",
-        status: "active",
-    },
-    {
-        name: "Ueli Maurer",
-        Role: "Federal Councillor",
-        departement: "The Federal Department of Finance (FDF)",
-        status: "active",
-    },
-    {
-        name: "Guy Parmelin",
-        Role: "Federal Councillor",
-        departement: "The Federal Department of Economic Affairs, Education and Research (EAER)",
-        status: "active",
-    },
-    {
-        name: "Karin Keller-Sutter",
-        Role: "Federal Councillor",
-        departement: "The Federal Department of Justice and Police (FDJP)",
-        status: "active",
-    },
-];
+import { useGetSubjectsQuery } from "../api/apiSlice";
+import { useEffect, useState } from "react";
 
+// let subjects = []
 
 const QueryPage = () => {
+    const { data: dataSubjects, isSuccess: isSuccessSubjects } = useGetSubjectsQuery()
+
+    const [currentSubjects, setCurrentSubjects] = useState([])
+    
+    console.log(dataSubjects, isSuccessSubjects);
+    useEffect(() => {
+        if (isSuccessSubjects) {
+            // subjects = dataSubjects.map((subject) => {
+            //     subjects.push({ name: subject })
+            // })
+            // setCurrentSubjects(subjects)
+        }
+    }, [isSuccessSubjects])
+
     return (
         <Box w='100%' bg='white'>
             <Box w='100%' h='90px' display='flex' flexDir='column' gap={7} mt='35px' pl='35px' pr='35px'>
@@ -77,17 +50,11 @@ const QueryPage = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {data.map((item) => (
-                                <TableRow key={item.name}>
+                            {/* {currentSubjects.map((i, item) => (
+                                <TableRow key={i}>
                                     <TableCell>{item.name}</TableCell>
-                                    <TableCell>
-                                        <Text>{item.Role}</Text>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Text>{item.departement}</Text>
-                                    </TableCell>
                                 </TableRow>
-                            ))}
+                            ))} */}
                         </TableBody>
                     </Table>
                 </Card>

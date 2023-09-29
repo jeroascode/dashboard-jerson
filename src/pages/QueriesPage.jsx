@@ -1,8 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 
 import { Box, Divider, Heading } from "@chakra-ui/react";
 import { Card, Title, AreaChart, DonutChart, BarList, Bold, Flex, Metric, Text } from "@tremor/react";
 
-import { useGetAssistanceBySubjectQuery } from "../api/apiSlice";
+import { useGetTopStudentQuery, useGetTopSubjectQuery } from "../api/apiSlice";
+import { useEffect, useState } from "react";
 
 const chartdata = [
   {
@@ -135,36 +137,24 @@ const data = [
   }
 ];
 
-const cities = [
-  {
-    name: "New York",
-    sales: 9800,
-  },
-  {
-    name: "London",
-    sales: 4567,
-  },
-  {
-    name: "Hong Kong",
-    sales: 3908,
-  },
-  {
-    name: "San Francisco",
-    sales: 2400,
-  },
-  {
-    name: "Singapore",
-    sales: 1908,
-  },
-  {
-    name: "Zurich",
-    sales: 1398,
-  },
-];
-
 const QueriesPage = () => {
+  const { data: dataTopSubjects, isSuccess: isSuccessTopSubjects } = useGetTopSubjectQuery()
+  const { data: dataTopStudent, isSuccess: isSuccessTopStudent } = useGetTopStudentQuery()
 
-  const { data } = useGetAssistanceBySubjectQuery()
+  const [currentTopSubject, setCurrentTopSubject] = useState([])
+  const [currentTopStudent, setCurrentTopStudent] = useState([])
+
+  useEffect(() => {
+    if (isSuccessTopSubjects) {
+      setCurrentTopSubject(dataTopSubjects)
+    }
+  }, [isSuccessTopSubjects])
+
+  useEffect(() => {
+    if (isSuccessTopStudent) {
+      setCurrentTopStudent(dataTopStudent)
+    }
+  }, [isSuccessTopStudent])
 
   return (
     <Box w='100%' bg='white'>
@@ -186,25 +176,24 @@ const QueriesPage = () => {
           </Card>
         </Box>
         <Box display='flex' w='100%' gap='35px'>
-          <Card >
-            <Title>Query 2</Title>
-            <Flex className="mt-4">
-              <Text>
-                <Bold>Source</Bold>
-              </Text>
-              <Text>
-                <Bold>Visits</Bold>
-              </Text>
-            </Flex>
-            <BarList data={data} className="mt-2" />
-          </Card>
-          <Card className="max-w-lg">
-            <Title>Query 3</Title>
+        <Card className="max-w-lg">
+            <Title>Top Asistencia por Correo Estudiante</Title>
             <DonutChart
               className="mt-6"
-              data={cities}
-              category="sales"
-              index="name"
+              data={currentTopStudent}
+              category="Total"
+              index="Correo"
+              variant="pie"
+              colors={["slate", "violet", "indigo", "rose", "cyan", "amber"]}
+            />
+          </Card>
+          <Card className="max-w-lg">
+            <Title>Top Materias por Asistencia</Title>
+            <DonutChart
+              className="mt-6"
+              data={currentTopSubject}
+              category="Total"
+              index="Asignatura"
               colors={["slate", "violet", "indigo", "rose", "cyan", "amber"]}
             />
           </Card>
