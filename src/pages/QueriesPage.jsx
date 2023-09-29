@@ -2,6 +2,8 @@
 import { Box, Divider, Heading } from "@chakra-ui/react";
 import { Card, Title, AreaChart, DonutChart, BarList, Bold, Flex, Metric, Text } from "@tremor/react";
 
+import { useGetAssistanceBySubjectQuery } from "../api/apiSlice";
+
 const chartdata = [
   {
     date: "Jan 22",
@@ -161,6 +163,9 @@ const cities = [
 ];
 
 const QueriesPage = () => {
+
+  const { data } = useGetAssistanceBySubjectQuery()
+
   return (
     <Box w='100%' bg='white'>
       <Box w='100%' h='90px' display='flex' flexDir='column' gap={7} mt='35px' pl='35px' pr='35px'>
