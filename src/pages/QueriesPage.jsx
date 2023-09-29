@@ -1,9 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import { useEffect, useState } from "react";
-import { Box, Divider, Heading, Text as ChText } from "@chakra-ui/react";
+import { Box, Divider, Heading, Text as ChText, Button } from "@chakra-ui/react";
 import { Card, Title, AreaChart, DonutChart, BarList, Bold, Flex, Metric, Text } from "@tremor/react";
 import { useGetTopSubjectQuery, useGetTopStudentQuery, useGetTopSubjectMaxQuery, useGetTopAcademicProgramAssitanceQuery, useGetStudentsByAcademicProgramQuery, useGetStudentsByAcademicProgramMaxQuery } from "../api/apiSlice";
+import { CSVLink } from "react-csv";
 
 const QueriesPage = () => {
   const { data: dataTopSubjects, isSuccess: isSuccessTopSubjects } = useGetTopSubjectQuery()
@@ -87,30 +88,37 @@ const QueriesPage = () => {
             />
           </Card>
         </Box>
-        <Box display='flex' w='100%' gap='35px'>
-          <Card className="max-w-lg">
-            <Title>Top de Asistencia por Programa Académico</Title>
-            <Flex className="mt-4">
-              <Text>
-                <Bold>Programa</Bold>
-              </Text>
-              <Text>
-                <Bold>Total</Bold>
-              </Text>
-            </Flex>
-            <BarList data={currentTopAcademicProgramAssitance} className="mt-2" />
-          </Card>
-          <Card className="max-w-lg">
-            <Title>Top Materias por Asistencia</Title>
-            <DonutChart
-              className="mt-6"
-              data={currentTopSubject}
-              category="Total"
-              index="Asignatura"
-              colors={["slate", "violet", "indigo", "rose", "cyan", "amber"]}
-            />
-          </Card>
-          <Box display='flex' flexDir='column' w='100%' gap='35px'>
+        <Box display='flex' gap='35px' justifyContent='space-between'>
+          <Box display='flex' flexDir='column' alignItems='center'>
+            <Card className="max-w-lg">
+              <Title>Top de Asistencia por Programa Académico</Title>
+              <Flex className="mt-4">
+                <Text>
+                  <Bold>Programa</Bold>
+                </Text>
+                <Text>
+                  <Bold>Total</Bold>
+                </Text>
+              </Flex>
+              <BarList data={currentTopAcademicProgramAssitance} className="mt-2" />
+            </Card>
+            <Button w='350px' mt='25px' bg='#06D6A0' color='white'><CSVLink data={currentTopAcademicProgramAssitance}>Descargar Reporte</CSVLink></Button>
+          </Box>
+          <Box display='flex' flexDir='column'>
+            <Card className="max-w-lg">
+              <Title>Top Materias por Asistencia</Title>
+              <DonutChart
+                className="mt-6"
+                data={currentTopSubject}
+                category="Total"
+                index="Asignatura"
+                colors={["slate", "violet", "indigo", "rose", "cyan", "amber"]}
+              />
+            </Card>
+            <Button w='350px' mt='25px' bg='#06D6A0' color='white'><CSVLink data={currentTopSubject}>Descargar Reporte</CSVLink></Button>
+          </Box>
+          <Box display='flex' gap='35px'>
+          <Box display='flex' flexDir='column'>
             <Card className="max-w-lg">
               <Title>Top Asistencia por Correo Estudiante</Title>
               <DonutChart
@@ -122,7 +130,9 @@ const QueriesPage = () => {
                 colors={["slate", "violet", "indigo", "rose", "cyan", "amber"]}
               />
             </Card>
-            <Box display='flex' w='100%' gap='35px'>
+            <Button w='350px' mt='25px' bg='#06D6A0' color='white'><CSVLink data={currentTopStudent}>Descargar Reporte</CSVLink></Button>
+            </Box>
+            <Box display='flex' flexDir='column' w='100%' gap='35px' ml='100px'>
               <Card className="max-w-xs mx-auto" decoration="top" decorationColor="indigo">
                 <Text >Materia con Mayor Asistencia</Text>
                 <ChText pt='3px' fontWeight='bold'>{currentTopSubjectMax.name}</ChText>
