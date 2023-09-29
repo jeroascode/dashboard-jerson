@@ -25,8 +25,24 @@ export const apiSlice = createApi({
         getTopAcademicProgramAssitance: builder.query({
             query: () => '/top-academic-program-assitance',
             transformResponse: (response) => response.Subjects
+        }),
+        getStudentsByAcademicProgram: builder.query({
+            query: () => '/students-by-academic-program',
+            transformResponse: (response) => response.result
+        }),
+        getStudentsByAcademicProgramMax: builder.query({
+            query: () => '/students-by-academic-program-max',
+            transformResponse: (response) => response.result
         })
     })
 })
 
-export const { useGetAssistanceBySubjectQuery, useGetTopSubjectQuery, useGetTopStudentQuery, useGetTopSubjectMaxQuery, useGetTopAcademicProgramAssitanceQuery } = apiSlice
+export const {
+    useGetAssistanceBySubjectQuery,
+    useGetTopSubjectQuery,
+    useGetTopStudentQuery,
+    useGetTopSubjectMaxQuery,
+    useGetTopAcademicProgramAssitanceQuery,
+    useGetStudentsByAcademicProgramQuery,
+    useGetStudentsByAcademicProgramMaxQuery
+} = apiSlice

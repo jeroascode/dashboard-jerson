@@ -3,51 +3,22 @@
 import { useEffect, useState } from "react";
 import { Box, Divider, Heading, Text as ChText } from "@chakra-ui/react";
 import { Card, Title, AreaChart, DonutChart, BarList, Bold, Flex, Metric, Text } from "@tremor/react";
-import { useGetTopSubjectQuery, useGetTopStudentQuery, useGetTopSubjectMaxQuery, useGetTopAcademicProgramAssitanceQuery } from "../api/apiSlice";
-
-const chartdata = [
-  {
-    date: "Jan 22",
-    SemiAnalysis: 2890,
-    "The Pragmatic Engineer": 2338,
-  },
-  {
-    date: "Feb 22",
-    SemiAnalysis: 2756,
-    "The Pragmatic Engineer": 2103,
-  },
-  {
-    date: "Mar 22",
-    SemiAnalysis: 3322,
-    "The Pragmatic Engineer": 2194,
-  },
-  {
-    date: "Apr 22",
-    SemiAnalysis: 3470,
-    "The Pragmatic Engineer": 2108,
-  },
-  {
-    date: "May 22",
-    SemiAnalysis: 3475,
-    "The Pragmatic Engineer": 1812,
-  },
-  {
-    date: "Jun 22",
-    SemiAnalysis: 3129,
-    "The Pragmatic Engineer": 1726,
-  },
-];
+import { useGetTopSubjectQuery, useGetTopStudentQuery, useGetTopSubjectMaxQuery, useGetTopAcademicProgramAssitanceQuery, useGetStudentsByAcademicProgramQuery, useGetStudentsByAcademicProgramMaxQuery } from "../api/apiSlice";
 
 const QueriesPage = () => {
   const { data: dataTopSubjects, isSuccess: isSuccessTopSubjects } = useGetTopSubjectQuery()
   const { data: dataTopStudent, isSuccess: isSuccessTopStudent } = useGetTopStudentQuery()
   const { data: dataTopSubjectMax, isSuccess: isSuccessTopSubjectMax } = useGetTopSubjectMaxQuery()
   const { data: dataTopAcademicProgramAssitance, isSuccess: isSuccessTopAcademicProgramAssitance } = useGetTopAcademicProgramAssitanceQuery()
+  const { data: dataStudentsByAcademicProgram, isSuccess: isSuccessStudentsByAcademicProgram } = useGetStudentsByAcademicProgramQuery()
+  const { data: dataStudentsByAcademicProgramMax, isSuccess: isSuccessStudentsByAcademicProgramMax } = useGetStudentsByAcademicProgramMaxQuery()
 
   const [currentTopSubject, setCurrentTopSubject] = useState([])
   const [currentTopStudent, setCurrentTopStudent] = useState([])
   const [currentTopSubjectMax, setCurrentTopSubjectMax] = useState([])
   const [currentTopAcademicProgramAssitance, setCurrentTopAcademicProgramAssitance] = useState([])
+  const [currentStudentsByAcademicProgram, setCurrentStudentsByAcademicProgram] = useState([])
+  const [currentStudentsByAcademicProgramMax, setCurrentStudentsByAcademicProgramMax] = useState([])
 
   useEffect(() => {
     if (isSuccessTopSubjects) {
@@ -79,6 +50,24 @@ const QueriesPage = () => {
     }
   }, [isSuccessTopAcademicProgramAssitance])
 
+  useEffect(() => {
+    if (isSuccessStudentsByAcademicProgram) {
+      const programs = dataStudentsByAcademicProgram.map((program) => {
+        return { academicProgram: program.Programa_Academico, total: program["Total Estudiantes"] }
+      })
+      setCurrentStudentsByAcademicProgram(programs)
+    }
+  }, [isSuccessStudentsByAcademicProgram])
+
+  useEffect(() => {
+    if (isSuccessStudentsByAcademicProgramMax) {
+      const AcademicProgram = dataStudentsByAcademicProgramMax.Programa_Academico;
+      const totalStudents = dataStudentsByAcademicProgramMax["Total Estudiantes"];
+      const programMax = { academicProgram: AcademicProgram, total: totalStudents }
+      setCurrentStudentsByAcademicProgramMax(programMax)
+    }
+  }, [isSuccessStudentsByAcademicProgramMax])
+
   return (
     <Box w='100%' bg='white'>
       <Box w='100%' h='90px' display='flex' flexDir='column' gap={7} mt='35px' pl='35px' pr='35px'>
@@ -88,12 +77,12 @@ const QueriesPage = () => {
       <Box display='flex' flexDir='column' gap='35px' pt='0' pb='35px' pl='35px' pr='35px'>
         <Box w='100%' display='flex'>
           <Card>
-            <Title>Query 1</Title>
+            <Title>Estudiantes por Programa Académico</Title>
             <AreaChart
               className="h-72 mt-4"
-              data={chartdata}
-              index="date"
-              categories={["SemiAnalysis", "The Pragmatic Engineer"]}
+              data={currentStudentsByAcademicProgram}
+              index="total"
+              categories={["academicProgram", "total"]}
               colors={["indigo", "cyan"]}
             />
           </Card>
@@ -122,33 +111,27 @@ const QueriesPage = () => {
             />
           </Card>
           <Box display='flex' flexDir='column' w='100%' gap='35px'>
+            <Card className="max-w-lg">
+              <Title>Top Asistencia por Correo Estudiante</Title>
+              <DonutChart
+                className="mt-6"
+                data={currentTopStudent}
+                category="Total"
+                index="Correo"
+                variant="pie"
+                colors={["slate", "violet", "indigo", "rose", "cyan", "amber"]}
+              />
+            </Card>
             <Box display='flex' w='100%' gap='35px'>
               <Card className="max-w-xs mx-auto" decoration="top" decorationColor="indigo">
                 <Text >Materia con Mayor Asistencia</Text>
                 <ChText pt='3px' fontWeight='bold'>{currentTopSubjectMax.name}</ChText>
                 <Metric>{currentTopSubjectMax.total}</Metric>
               </Card>
-
-              <Card className="max-w-lg">
-                <Title>Top Asistencia por Correo Estudiante</Title>
-                <DonutChart
-                  className="mt-6"
-                  data={currentTopStudent}
-                  category="Total"
-                  index="Correo"
-                  variant="pie"
-                  colors={["slate", "violet", "indigo", "rose", "cyan", "amber"]}
-                />
-              </Card>
-            </Box>
-            <Box display='flex' w='100%' gap='35px'>
               <Card className="max-w-xs mx-auto" decoration="top" decorationColor="indigo">
-                <Text>Query 6</Text>
-                <Metric>$ 34,743</Metric>
-              </Card>
-              <Card className="max-w-xs mx-auto" decoration="top" decorationColor="indigo">
-                <Text >Query 7</Text>
-                <Metric>$ 34,743</Metric>
+                <Text>Programa Académico con más Estudiantes</Text>
+                <ChText pt='3px' fontWeight='bold'>{currentStudentsByAcademicProgramMax.academicProgram}</ChText>
+                <Metric>{currentStudentsByAcademicProgramMax.total}</Metric>
               </Card>
             </Box>
           </Box>
